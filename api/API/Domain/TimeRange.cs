@@ -1,4 +1,4 @@
-namespace API;
+namespace API.Domain;
 
 public readonly record struct TimeRange
 {
@@ -7,8 +7,8 @@ public readonly record struct TimeRange
 
     public TimeRange(DateTime start, DateTime end)
     {
-        if (start > end)
-            throw new ArgumentException("Start can't be after end", nameof(start));
+        if (start >= end)
+            throw new ArgumentException("Start must be before end", nameof(start));
 
         Start = start;
         End = end;

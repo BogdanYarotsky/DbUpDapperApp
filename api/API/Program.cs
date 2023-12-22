@@ -1,4 +1,5 @@
 using API;
+using API.Domain;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -9,21 +10,20 @@ builder.Services.AddCors();
 var app = builder.Build();
 
 var sampleTodos = new TimeSlot[] {
-    new(1, "Walk the dog", new TimeRange(new DateTime(), new DateTime())),
-    new(2, "Do the dishes", new TimeRange(new DateTime(), new DateTime())),
-    new(3, "Do the laundry", new TimeRange(new DateTime(), new DateTime())),
-    new(4, "Clean the bathroom", new TimeRange(new DateTime(), new DateTime())),
-    new(5, "Clean the car", new TimeRange(new DateTime(), new DateTime()))
+    new(new Guid(), new Guid(), new TimeRange(new(), new())),
+    new(new Guid(), new Guid(), new TimeRange(new(), new())),
+    new(new Guid(), new Guid(), new TimeRange(new(), new())),
+    new(new Guid(), new Guid(), new TimeRange(new(), new())),
+    new(new Guid(), new Guid(), new TimeRange(new(), new()))
 };
 
 
 var todosApi = app.MapGroup("/todos");
 todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
+todosApi.MapGet("/{id}", (Guid id) =>
     sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
         ? Results.Ok(todo)
         : Results.NotFound());
 
 app.UseCors(p => p.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173"));
 app.Run();
-public record TimeSlot(int Id, string? Title, TimeRange TimeRange);
