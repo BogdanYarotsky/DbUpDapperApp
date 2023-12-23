@@ -6,7 +6,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Add(AppJsonSerializerContext.Default);
 });
-builder.Services.AddCors();
 var app = builder.Build();
 
 var sampleTodos = new TimeSlot[] {
@@ -26,4 +25,5 @@ todosApi.MapGet("/{id}", (Guid id) =>
         : Results.NotFound());
 
 app.UseCors(p => p.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173"));
+
 app.Run();
