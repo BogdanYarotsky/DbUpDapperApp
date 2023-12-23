@@ -1,19 +1,11 @@
+using API;
+using Dapper;
 using Domain;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var clientUrl = builder.Configuration["ClientUrl"] 
-                ?? throw new ArgumentException(
-                    "ClientUrl not found in app configuration");
-
-builder.Services.AddCors(cors =>
-{
-    cors.AddDefaultPolicy(p =>
-    {
-        p.AllowAnyHeader().AllowAnyMethod().WithOrigins(clientUrl);
-    });
-});
-
+builder.AddClientCorsPolicy();
 var app = builder.Build();
 
 var sampleTodos = Enumerable
@@ -22,7 +14,24 @@ var sampleTodos = Enumerable
     .ToArray();
 
 var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
+todosApi.MapGet("/", async () =>
+{
+    try
+    {
+        var cs = builder.Configuration.GetConnectionString("PlanningDb");
+        await using var dbConn = new SqlConnection(cs);
+        var res = await dbConn.QuerySingleAsync("SELECT 1");
+        return Results.Ok(res);
+    }
+    catch (Exception e)
+    {
+        return Results.Problem(new ProblemDetails
+        {
+            Title = e.ToString()
+        });
+    }
+});
+
 todosApi.MapGet("/{id}", (Guid id) =>
     sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
         ? Results.Ok(todo)
