@@ -1,11 +1,19 @@
-using API;
-using API.Domain;
+using Domain;
 
-var builder = WebApplication.CreateSlimBuilder(args);
-builder.Services.ConfigureHttpJsonOptions(options =>
+var builder = WebApplication.CreateBuilder(args);
+
+var clientUrl = builder.Configuration["ClientUrl"] 
+                ?? throw new ArgumentException(
+                    "ClientUrl not found in app configuration");
+
+builder.Services.AddCors(cors =>
 {
-    options.SerializerOptions.TypeInfoResolverChain.Add(AppJsonSerializerContext.Default);
+    cors.AddDefaultPolicy(p =>
+    {
+        p.AllowAnyHeader().AllowAnyMethod().WithOrigins(clientUrl);
+    });
 });
+
 var app = builder.Build();
 
 var sampleTodos = new TimeSlot[] {
@@ -24,6 +32,5 @@ todosApi.MapGet("/{id}", (Guid id) =>
         ? Results.Ok(todo)
         : Results.NotFound());
 
-app.UseCors(p => p.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:5173"));
-
+app.UseCors();
 app.Run();

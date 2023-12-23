@@ -1,9 +1,10 @@
-namespace API.Domain;
+namespace Domain;
 
 public readonly record struct TimeRange
 {
     public DateTime Start { get; }
     public DateTime End { get; }
+    public TimeSpan Duration => End - Start;
 
     public TimeRange(DateTime start, DateTime end)
     {
