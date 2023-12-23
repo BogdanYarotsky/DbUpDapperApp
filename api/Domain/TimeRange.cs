@@ -8,7 +8,7 @@ public readonly record struct TimeRange
 
     public TimeRange(DateTime start, DateTime end)
     {
-        if (start >= end)
+        if (start > end)
             throw new ArgumentException("Start must be before end", nameof(start));
 
         Start = start;

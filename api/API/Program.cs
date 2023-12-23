@@ -16,14 +16,10 @@ builder.Services.AddCors(cors =>
 
 var app = builder.Build();
 
-var sampleTodos = new TimeSlot[] {
-    new(new Guid(), new Guid(), new TimeRange(new(), new())),
-    new(new Guid(), new Guid(), new TimeRange(new(), new())),
-    new(new Guid(), new Guid(), new TimeRange(new(), new())),
-    new(new Guid(), new Guid(), new TimeRange(new(), new())),
-    new(new Guid(), new Guid(), new TimeRange(new(), new()))
-};
-
+var sampleTodos = Enumerable
+    .Range(0, 5)
+    .Select(_ => new TimeSlot(new Guid(), new Guid(), new TimeRange()))
+    .ToArray();
 
 var todosApi = app.MapGroup("/todos");
 todosApi.MapGet("/", () => sampleTodos);
