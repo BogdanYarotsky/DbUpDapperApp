@@ -5,7 +5,7 @@ using Microsoft.Data.SqlClient;
 
 namespace API;
 
-public static class App
+public static class WebApp
 {
     public static WebApplication Create(string[] args)
     {
@@ -56,9 +56,8 @@ public static class App
         {
             try
             {
-                throw new Exception();
                 var res = await dbConn.QuerySingleAsync("SELECT 1");
-                return Results.Ok((object?)res);
+                return Results.Ok(res);
             }
             catch (Exception e)
             {

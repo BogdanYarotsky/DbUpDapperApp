@@ -1,9 +1,10 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace API.Integration.Tests;
 
 [TestClass]
-public class WebApplicationTests
+public class WebAppTests
 {
     private HttpClient _c;
 
