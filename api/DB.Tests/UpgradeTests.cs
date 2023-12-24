@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text;
-using Dapper;
+﻿using Dapper;
 using DbUp;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -30,18 +28,10 @@ public class UpgradeTests
     {
         EnsureDatabase.For.SqlDatabase(_connectionString);
         await using var conn = NewConnection();
-        var tableNames = await conn.QueryAsync<string>(@"
-            SELECT name 
-            FROM sys.tables
-            WHERE type = 'U';
+        await conn.ExecuteAsync(@"
+            EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all';
+            EXEC sp_MSforeachtable 'DROP TABLE ?';
         ");
-
-        var sb = new StringBuilder();
-        sb.AppendLine("EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all';");
-        foreach (var table in tableNames)
-            sb.AppendLine($"DROP TABLE [{table}];");
-
-        await conn.ExecuteAsync(sb.ToString());
     }
 
     [TestMethod]
