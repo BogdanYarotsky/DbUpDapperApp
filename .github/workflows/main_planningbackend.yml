@@ -33,9 +33,6 @@ jobs:
           sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /tmp/openssl.cnf
           cat /tmp/openssl.cnf >/etc/ssl/openssl.cnf
 
-      - name: Fix SSL bug
-        run: sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
-
       - name: Start SQL Server
         run: docker-compose -f docker-compose.db.yml up -d
 
