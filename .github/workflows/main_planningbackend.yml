@@ -10,20 +10,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: windows-latest
-
+  build-n-test:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "8.x"
           include-prerelease: true
 
-      - name: Build with dotnet
-        run: dotnet build .\api\API\API.csproj --configuration Release
+      - name: Build
+        run: dotnet build .\api\API\api.sln -c Release -o ${{env.DOTNET_ROOT}}/artifacts
+
+      - name: Unit tests
+        run: dotnet test ${{env.DOTNET_ROOT}}/artifacts/Domain.Tests.dll ${{env.DOTNET_ROOT}}/artifacts/API.Unit.Tests.dll
+
+      - name: Start SQL Server
+        run: docker-compose -f docker-compose.db.yml up -d
+
+      - name: Integration tests
+        run: dotnet test ${{env.DOTNET_ROOT}}/artifacts/DB.Tests.dll ${{env.DOTNET_ROOT}}/artifacts/API.Integration.Tests.dll
 
       - name: dotnet publish
         run: dotnet publish .\api\API\API.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
@@ -31,12 +39,12 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
+          name: .net-app
 
   deploy:
-    runs-on: windows-latest
-    needs: build
+    runs-on: ubuntu-latest
+    needs: build-n-test
     environment:
       name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
