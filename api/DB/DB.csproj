@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Migrations\001_CreateTimeSlotTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\001_CreateTimeSlotTable.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.24" />
     <PackageReference Include="dbup-sqlserver" Version="5.0.37" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />

@@ -7,17 +7,7 @@ namespace API;
 
 public static class WebApp
 {
-    public static WebApplication Create(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-        var config = builder.Configuration.Parse();
-        builder.Services.Configure(config);
-        var app = builder.Build();
-        app.Configure();
-        return app;
-    }
-
-    private static Configuration Parse(this IConfiguration configuration)
+    public static Configuration Parse(this IConfiguration configuration)
     {
         return new Configuration
         {
@@ -31,7 +21,7 @@ public static class WebApp
         };
     }
 
-    private static void Configure(this IServiceCollection services, Configuration configuration)
+    public static void Configure(this IServiceCollection services, Configuration configuration)
     {
         services.AddCors(cors =>
         {

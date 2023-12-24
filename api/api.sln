@@ -11,6 +11,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB", "DB\DB.csproj", "{F060
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API.Integration.Tests", "API.Integration.Tests\API.Integration.Tests.csproj", "{A6D51259-F994-4B5D-B8A4-9493B337E29E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DB.Tests", "DB.Tests\DB.Tests.csproj", "{EDAAF562-175F-4553-BE01-9DCF0CDEC68E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1A395BD2-2B48-4447-B4EB-B6A3C9BC1FA2}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.db.yml = docker-compose.db.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +40,10 @@ Global
 		{A6D51259-F994-4B5D-B8A4-9493B337E29E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6D51259-F994-4B5D-B8A4-9493B337E29E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6D51259-F994-4B5D-B8A4-9493B337E29E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDAAF562-175F-4553-BE01-9DCF0CDEC68E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDAAF562-175F-4553-BE01-9DCF0CDEC68E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDAAF562-175F-4553-BE01-9DCF0CDEC68E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDAAF562-175F-4553-BE01-9DCF0CDEC68E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
