@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
 using Dapper;
+using DbUp;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,6 +26,7 @@ public class UpgradeTests
     [TestInitialize]
     public async Task EnsureEmptyDatabase()
     {
+        EnsureDatabase.For.SqlDatabase(_connectionString);
         await using var conn = NewConnection();
         var tableNames = await conn.QueryAsync<string>(@"
             SELECT name 
