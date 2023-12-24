@@ -28,6 +28,12 @@ jobs:
         run: dotnet test ${{env.DOTNET_ROOT}}/artifacts/Domain.Tests.dll ${{env.DOTNET_ROOT}}/artifacts/API.Unit.Tests.dll
 
       - name: Fix SSL bug
+        run: |
+          cp /etc/ssl/openssl.cnf /tmp
+          sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /tmp/openssl.cnf
+          cat /tmp/openssl.cnf >/etc/ssl/openssl.cnf
+
+      - name: Fix SSL bug
         run: sed -i 's/openssl_conf = openssl_init/#openssl_conf = openssl_init/g' /etc/ssl/openssl.cnf
 
       - name: Start SQL Server
