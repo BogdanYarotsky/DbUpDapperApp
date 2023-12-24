@@ -22,7 +22,7 @@ jobs:
           include-prerelease: true
 
       - name: Build
-        run: dotnet build .\api\API\api.sln -c Release -o ${{env.DOTNET_ROOT}}/artifacts
+        run: dotnet build .\api\api.sln -c Release -o ${{env.DOTNET_ROOT}}/artifacts
 
       - name: Unit tests
         run: dotnet test ${{env.DOTNET_ROOT}}/artifacts/Domain.Tests.dll ${{env.DOTNET_ROOT}}/artifacts/API.Unit.Tests.dll
