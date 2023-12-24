@@ -18,7 +18,8 @@ public class UpgradeTests
         InitialCatalog = "Test",
         ConnectTimeout = 3,
         CommandTimeout = 3,
-        DataSource = "tcp:localhost,1433"
+        DataSource = "tcp:localhost,1433",
+        Encrypt = false
     }.ToString();
 
     private static SqlConnection NewConnection() 
