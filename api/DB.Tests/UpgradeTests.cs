@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
+using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -17,15 +19,29 @@ public class UpgradeTests
         CommandTimeout = 3,
     }.ToString();
 
+    private static SqlConnection NewConnection() 
+        => new(_connectionString);
+
     [TestInitialize]
-    public async Task EnsureDatabaseIsInCleanState()
+    public async Task EnsureEmptyDatabase()
     {
-        await using var conn = new SqlConnection(_connectionString);
-        await conn.ExecuteAsync("DROP DATABASE [Test]");
+        await using var conn = NewConnection();
+        var tableNames = await conn.QueryAsync<string>(@"
+            SELECT name 
+            FROM sys.tables
+            WHERE type = 'U';
+        ");
+
+        var sb = new StringBuilder();
+        sb.AppendLine("EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all';");
+        foreach (var table in tableNames)
+            sb.AppendLine($"DROP TABLE [{table}];");
+
+        await conn.ExecuteAsync(sb.ToString());
     }
 
     [TestMethod]
-    public void ApplyingAllMigrationsDoesNotThrow()
+    public void AllMigrationsApplySuccessfully()
     {
         Upgrade.SqlDatabase(_connectionString);
     }
@@ -36,7 +52,7 @@ public class UpgradeTests
         Upgrade.SqlDatabase(_connectionString, 1);
         await using var conn = new SqlConnection(_connectionString);
         var tablesCount = await conn.ExecuteScalarAsync<int>(
-            "SELECT COUNT(*) FROM sys.databases WHERE name = N'TimeSlot'");
+            "SELECT COUNT(*) FROM sys.tables WHERE name = 'TimeSlot'");
         Assert.AreEqual(1, tablesCount);
     }
 }
