@@ -25,7 +25,7 @@ jobs:
         run: dotnet build .\api\api.sln --configuration Release -o "${{env.DOTNET_ROOT}}\artifacts"
 
       - name: Unit tests
-        run: dotnet test "${{env.DOTNET_ROOT}}\artifacts\Domain.Tests.dll"" "${{env.DOTNET_ROOT}}\artifacts\API.Unit.Tests.dll"
+        run: dotnet test "${{env.DOTNET_ROOT}}\artifacts\Domain.Tests.dll" "${{env.DOTNET_ROOT}}\artifacts\API.Unit.Tests.dll"
 
       - name: Start SQL Server
         run: choco install sql-server-2019 -y --params="'/Q /SUPPRESSPRIVACYSTATEMENTNOTICE /IACCEPTSQLSERVERLICENSETERMS /ACTION=Install /SkipRules=RebootRequiredCheck /FEATURES=SQLENGINE /SECURITYMODE=SQL /TCPENABLED=1 /SAPWD=<YourStrong@Passw0rd>'"
