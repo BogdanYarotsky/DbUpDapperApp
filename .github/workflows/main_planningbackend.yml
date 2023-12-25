@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-n-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
 
@@ -19,10 +19,9 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: "8.x"
-          include-prerelease: true
 
       - name: Build
-        run: dotnet build .\api\api.sln --configuration Release -o "${{env.DOTNET_ROOT}}\artifacts"
+        run: dotnet build .\api\api.sln --configuration Release -o ${{env.DOTNET_ROOT}}\artifacts
 
       - name: Unit tests
         run: dotnet test ${{env.DOTNET_ROOT}}\artifacts\Domain.Tests.dll ${{env.DOTNET_ROOT}}\artifacts\API.Unit.Tests.dll
@@ -43,7 +42,7 @@ jobs:
           name: .net-app
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-20.04
     needs: build-n-test
     environment:
       name: "Production"
