@@ -11,6 +11,7 @@ on:
 
 jobs:
   build-n-test:
+    # Using old ubuntu due to breaking change in OpenSSL in 22.04 - https://github.com/microsoft/msphpsql/issues/1419#issuecomment-1303626500
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -21,19 +22,19 @@ jobs:
           dotnet-version: "8.x"
 
       - name: Build
-        run: dotnet build .\api\api.sln --configuration Release -o ${{env.DOTNET_ROOT}}\artifacts
+        run: dotnet build ./api/api.sln --configuration Release -o ${{env.DOTNET_ROOT}}/artifacts
 
       - name: Unit tests
-        run: dotnet test ${{env.DOTNET_ROOT}}\artifacts\Domain.Tests.dll ${{env.DOTNET_ROOT}}\artifacts\API.Unit.Tests.dll
+        run: dotnet test ${{env.DOTNET_ROOT}}/artifacts/Domain.Tests.dll ${{env.DOTNET_ROOT}}/artifacts/API.Unit.Tests.dll
 
       - name: Start SQL Server
         run: docker-compose -f docker-compose.db.yml up -d
 
       - name: Integration tests
-        run: dotnet test ${{env.DOTNET_ROOT}}\artifacts\DB.Tests.dll ${{env.DOTNET_ROOT}}\artifacts\API.Integration.Tests.dll
+        run: dotnet test ${{env.DOTNET_ROOT}}/artifacts/DB.Tests.dll ${{env.DOTNET_ROOT}}/artifacts/API.Integration.Tests.dll
 
       - name: dotnet publish
-        run: dotnet publish .\api\API\API.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./api/API/API.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
